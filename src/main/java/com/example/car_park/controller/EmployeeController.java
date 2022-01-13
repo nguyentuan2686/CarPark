@@ -3,10 +3,16 @@ package com.example.car_park.controller;
 import com.example.car_park.dto.EmployeeDTO;
 import com.example.car_park.dto.ResponseModel;
 import com.example.car_park.service.EmployeeService;
+import org.springframework.context.MessageSource;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @Author TuanNA
@@ -17,17 +23,38 @@ import java.util.List;
 @RequestMapping("/employee")
 public class EmployeeController {
 
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
+    private final MessageSource messageSource;
     ResponseModel responseModel = new ResponseModel();
 
-    public EmployeeController(EmployeeService employeeService){
+    public EmployeeController(EmployeeService employeeService, MessageSource messageSource){
         this.employeeService = employeeService;
+        this.messageSource = messageSource;
     }
 
     @GetMapping("/get-by-id/{id}")
     public ResponseModel<EmployeeDTO> getEmployeeById(@PathVariable(value = "id") Long id){
         responseModel.setData(employeeService.receive(id));
         return responseModel;
+    }
+
+    //Internationalization
+    @GetMapping("/hello-world")
+    public ResponseModel<String> hello(@RequestHeader(name = "Accept-Language", required = false) Locale locale){
+
+        ResponseModel<String> responseModel = new ResponseModel<>();
+        String hello = messageSource.getMessage("hello.massage", null, "Default is: xin chào", locale);
+        responseModel.setData(hello);
+        return responseModel;
+    }
+
+    @GetMapping("employee/{id}")
+    public EntityModel<EmployeeDTO> retrieveUser(@PathVariable Long id){
+        EmployeeDTO employeeDTO = employeeService.receive(id);
+        EntityModel<EmployeeDTO> entityModel = EntityModel.of(employeeDTO);
+        WebMvcLinkBuilder linkBuilder = linkTo(methodOn(this.getClass()).getAllEmployee(null, null,null,null,null));
+        entityModel.add(linkBuilder.withRel("all-employee"));
+        return  entityModel;
     }
 
     @GetMapping("/get-all")

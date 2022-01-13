@@ -22,7 +22,7 @@ import java.util.Optional;
  * @Version 1.0
  */
 @Service
-public class EmployeeServiceImpl implements EmployeeService<EmployeeDTO> {
+public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeRepository employeeRepository;
 
