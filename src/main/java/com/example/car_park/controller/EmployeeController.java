@@ -25,7 +25,6 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final MessageSource messageSource;
-    ResponseModel responseModel = new ResponseModel();
 
     public EmployeeController(EmployeeService employeeService, MessageSource messageSource){
         this.employeeService = employeeService;
@@ -34,6 +33,7 @@ public class EmployeeController {
 
     @GetMapping("/get-by-id/{id}")
     public ResponseModel<EmployeeDTO> getEmployeeById(@PathVariable(value = "id") Long id){
+        ResponseModel<EmployeeDTO> responseModel = new ResponseModel<>();
         responseModel.setData(employeeService.receive(id));
         return responseModel;
     }
@@ -50,6 +50,7 @@ public class EmployeeController {
 
     @GetMapping("employee/{id}")
     public EntityModel<EmployeeDTO> retrieveUser(@PathVariable Long id){
+        ResponseModel responseModel = new ResponseModel();
         EmployeeDTO employeeDTO = employeeService.receive(id);
         EntityModel<EmployeeDTO> entityModel = EntityModel.of(employeeDTO);
         WebMvcLinkBuilder linkBuilder = linkTo(methodOn(this.getClass()).getAllEmployee(null, null,null,null,null));
@@ -64,24 +65,28 @@ public class EmployeeController {
                                                            @RequestParam(value = "sortField", required = false) String sortField,
                                                            @RequestParam(value = "sortType", required = false) String sortType){
         List<EmployeeDTO> list = employeeService.getAll(keyword, currentPage, sizePage, sortField, sortType );
+        ResponseModel responseModel = new ResponseModel();
         responseModel.setData(list);
         return responseModel;
     }
 
     @PostMapping("/add-employee")
     public ResponseModel<Void> addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
+        ResponseModel responseModel = new ResponseModel();
         employeeService.create(employeeDTO);
         return responseModel;
     }
 
     @PutMapping("/edit-employee")
     public ResponseModel<Void> editEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
+        ResponseModel responseModel = new ResponseModel();
         employeeService.update(employeeDTO);
         return responseModel;
     }
 
     @DeleteMapping("/delete-employee")
     public ResponseModel<Void> deleteEmployee(@RequestParam(value = "id", required = false) Long id){
+        ResponseModel responseModel = new ResponseModel();
         employeeService.delete(id);
         return responseModel;
     }

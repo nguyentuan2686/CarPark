@@ -31,9 +31,9 @@ import java.util.Optional;
 @Service
 public class CarServiceImpl implements CarService {
 
-    private CarRepositoy carRepositoy;
-    private ModelMapper modelMapper;
-    private ParkinglotService parkinglotService;
+    private final CarRepositoy carRepositoy;
+    private final ModelMapper modelMapper;
+    private final ParkinglotService parkinglotService;
 
     public CarServiceImpl(CarRepositoy carRepositoy, ModelMapper modelMapper, ParkinglotService parkinglotService) {
         this.carRepositoy = carRepositoy;

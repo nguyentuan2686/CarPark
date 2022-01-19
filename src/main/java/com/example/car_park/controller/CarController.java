@@ -19,8 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/car")
 public class CarController {
-    private CarService carService;
-    ResponseModel responseModel = new ResponseModel();
+    private final CarService carService;
 
     public CarController(CarService carService){
         this.carService = carService;
@@ -28,6 +27,7 @@ public class CarController {
 
     @GetMapping("/get-by-id/{id}")
     public ResponseModel<CarDTO> getCarById(@PathVariable(value = "id") Long id){
+        ResponseModel<CarDTO> responseModel = new ResponseModel<>();
         responseModel.setData(carService.receive(id));
         return responseModel;
     }
@@ -39,6 +39,7 @@ public class CarController {
                                                            @RequestParam(value = "sortField", required = false) String sortField,
                                                            @RequestParam(value = "sortType", required = false) String sortType){
         List<CarDTO> list = carService.getAll(keyword, currentPage, sizePage, sortField, sortType );
+        ResponseModel responseModel = new ResponseModel();
         responseModel.setData(list);
         return responseModel;
     }
@@ -46,6 +47,7 @@ public class CarController {
     @GetMapping("get-by-status")
     public ResponseModel<List<CarDTO>> getAllCarByStatus(@RequestParam(value = "status") CarStatus carStatus){
         List<CarDTO> list = carService.getCarByCarStatus(carStatus);
+        ResponseModel responseModel = new ResponseModel();
         responseModel.setData(list);
         return responseModel;
     }
@@ -53,18 +55,21 @@ public class CarController {
     @PostMapping("/add-car")
     public ResponseModel<Void> addCar(@Valid @RequestBody CarDTO carDTO){
         carService.create(carDTO);
+        ResponseModel responseModel = new ResponseModel();
         return responseModel;
     }
 
     @PutMapping("/edit-car")
     public ResponseModel<Void> editCar(@Valid @RequestBody CarDTO carDTO){
         carService.update(carDTO);
+        ResponseModel responseModel = new ResponseModel();
         return responseModel;
     }
 
     @DeleteMapping("/delete-car")
     public ResponseModel<Void> deleteEmployee(@RequestParam(value = "id", required = false) Long id){
         carService.delete(id);
+        ResponseModel responseModel = new ResponseModel();
         return responseModel;
     }
 }

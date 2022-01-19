@@ -71,10 +71,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = modelMapper.map(employeeDTO, Employee.class);
         List<Employee> employees = employeeRepository.findAll();
 
-        for(int i = 0; i < employees.size(); i++){
-            if(employees.get(i).getId()==employee.getId()) continue;
+        for (Employee value : employees) {
+            if (value.getId() == employee.getId()) continue;
             else {
-                if(employees.get(i).getAccount().equalsIgnoreCase(employee.getAccount())){
+                if (value.getAccount().equalsIgnoreCase(employee.getAccount())) {
                     throw new MyCustomException("Account is already exist");
                 }
             }
